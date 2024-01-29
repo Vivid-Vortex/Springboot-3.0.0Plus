@@ -1,32 +1,35 @@
 package com.cach.controller;
 
-import com.cach.dto.ProductRequest;
-import com.cach.dto.ProductResponse;
-import com.cach.service.ProductService;
-import jakarta.validation.Valid;
+import com.cach.dto.City;
+import com.cach.service.CacheService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/product")
-@Validated
+@RequestMapping("/api/city")
 @RequiredArgsConstructor
 public class CacheController {
-    private final ProductService productService;
+    private final CacheService cacheService;
 
-    @GetMapping
-    @ResponseStatus
-    public void createProduct(@RequestBody @Valid ProductRequest productRequest) {
-        productService.createProduct(productRequest);
+    @PostMapping("/add")
+    public ResponseEntity<City> createProduct(@RequestBody City city) {
+        return new ResponseEntity<>(city, HttpStatus.CREATED);
     }
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> getAllproducts() {
-        productService.getAllproducts()
+    @GetMapping("/search/{cityName}")
+    public ResponseEntity<City> getCityByCityName(@PathVariable("cityName") String cityName) {
+        return new ResponseEntity<>(cacheService.getCityByCityName(cityName), HttpStatus.OK);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<City> updateCity(@RequestBody City city) {
+        return new ResponseEntity<>(cacheService.putCity(city), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<City> deleteCity(@RequestBody City city) {
+        return new ResponseEntity<>(cacheService.deleteCity(city), HttpStatus.OK);
     }
 }
